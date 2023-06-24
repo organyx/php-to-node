@@ -1,6 +1,9 @@
 class Person {
-  constructor() {
-    this.personName = {};
+  constructor(prefix, givenName) {
+    this.personName = {
+      prefix,
+      givenName
+    };
   }
 
   setPrefix(prefix) {

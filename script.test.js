@@ -20,4 +20,10 @@ describe('Person Class', () => {
     expect(person.getPrefix()).toEqual('Mr');
     expect(person.getGivenName()).toEqual('John');
   });
+
+  it('should set prefix and given name with constructor', () => {
+    const person = new Person('Mr', 'John');
+    expect(person.getPrefix()).toEqual('Mr');
+    expect(person.getGivenName()).toEqual('John');
+  });
 });
