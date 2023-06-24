@@ -1,4 +1,4 @@
-const { Person } = require('./script');
+const { Person, LocatorPersonProvider } = require('./script');
 
 describe('Person Class', () => {
   it('should set prefix', () => {
@@ -25,5 +25,43 @@ describe('Person Class', () => {
     const person = new Person('Mr', 'John');
     expect(person.getPrefix()).toEqual('Mr');
     expect(person.getGivenName()).toEqual('John');
+  });
+});
+
+describe('Locator Person Provider', () => {
+  it('should get person', () => {
+    const person = new Person('Mr', 'John');
+    const personProvider = new LocatorPersonProvider();
+    const persons = [person];
+    expect(personProvider.getPerson(persons, 'John')).toEqual(person);
+  });
+
+  it('should not get person', () => {
+    const person = new Person('Mr', 'John');
+    const personProvider = new LocatorPersonProvider();
+    const persons = [person];
+    expect(personProvider.getPerson(persons, 'Jane')).toEqual(undefined);
+  });
+
+  it('should filter prefix', () => {
+    const person = new Person('Mr', 'John');
+    const personProvider = new LocatorPersonProvider();
+    const persons = [person];
+    expect(personProvider.filterPrefix(persons, 'Mr')).toEqual([person]);
+  });
+
+  it('should not filter prefix', () => {
+    const person = new Person('Mr', 'John');
+    const personProvider = new LocatorPersonProvider();
+    const persons = [person];
+    expect(personProvider.filterPrefix(persons, 'Mrs')).toEqual([]);
+  });
+
+  it('should filter prefix with multiple persons', () => {
+    const person = new Person('Mr', 'John');
+    const person2 = new Person('Mrs', 'Jane');
+    const personProvider = new LocatorPersonProvider();
+    const persons = [person, person2];
+    expect(personProvider.filterPrefix(persons, 'Mr')).toEqual([person]);
   });
 });
