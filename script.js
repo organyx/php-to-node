@@ -25,11 +25,7 @@ class Person {
 
 class LocatorPersonProvider {
   getPerson(persons, givenName) {
-    for (let i = 0; i < persons.length; i++) {
-      if (persons[i].getGivenName() == givenName) {
-        return persons[i];
-      }
-    }
+    return persons.find(person => person.getGivenName() === givenName);
   }
 
   filterPrefix(persons, prefix) {
