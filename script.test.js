@@ -1,4 +1,4 @@
-const { Person, LocatorPersonProvider } = require('./script');
+const { Person, LocatorPersonProvider, PersonProviderFactory } = require('./script');
 
 describe('Person Class', () => {
   it('should set prefix', () => {
@@ -63,5 +63,16 @@ describe('Locator Person Provider', () => {
     const personProvider = new LocatorPersonProvider();
     const persons = [person, person2];
     expect(personProvider.filterPrefix(persons, 'Mr')).toEqual([person]);
+  });
+});
+
+describe('Person Provider Factory', () => {
+  it('should create locator person provider', () => {
+    const personProvider = PersonProviderFactory.createProvider('manual');
+    expect(personProvider instanceof LocatorPersonProvider).toEqual(true);
+  });
+
+  it('should throw error', () => {
+    expect(() => PersonProviderFactory.createProvider('invalid')).toThrow('Invalid provider type');
   });
 });

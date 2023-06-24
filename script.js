@@ -33,4 +33,14 @@ class LocatorPersonProvider {
   }
 }
 
-module.exports = { Person, LocatorPersonProvider };
+class PersonProviderFactory {
+  static createProvider(type) {
+    if (type === 'manual') {
+      return new LocatorPersonProvider();
+    } else {
+      throw new Error('Invalid provider type');
+    }
+  }
+}
+
+module.exports = { Person, LocatorPersonProvider, PersonProviderFactory };
