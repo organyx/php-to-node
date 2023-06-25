@@ -1,0 +1,49 @@
+FROM node:18-alpine AS base
+
+FROM base AS deps
+
+WORKDIR /app
+
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+
+RUN \
+    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+    elif [ -f package-lock.json ]; then npm ci; \
+    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
+    # Allow install without lockfile, so example works even without Node.js installed locally
+    else echo "Warning: Lockfile not found. It is recommended to commit lockfiles to version control." && yarn install; \
+    fi
+
+FROM base AS builder
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+
+COPY . .
+
+FROM base as runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodejs -u 1001
+
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/config ./config
+COPY --from=builder --chown=nodejs:nodejs /app/controllers ./controllers
+COPY --from=builder --chown=nodejs:nodejs /app/lib ./lib
+COPY --from=builder --chown=nodejs:nodejs /app/middleware ./middleware
+COPY --from=builder --chown=nodejs:nodejs /app/models ./models
+COPY --from=builder --chown=nodejs:nodejs /app/routes ./routes
+COPY --from=builder --chown=nodejs:nodejs /app/services ./services
+COPY --from=builder --chown=nodejs:nodejs /app/utils ./utils
+COPY --from=builder --chown=nodejs:nodejs /app/validation-schemas ./validation-schemas
+COPY --from=builder --chown=nodejs:nodejs /app/app.js ./
+COPY --from=builder --chown=nodejs:nodejs /app/docker-entrypoint.sh ./
+
+USER nodejs
+
+ENTRYPOINT [ "/app/docker-entrypoint.sh" ]
