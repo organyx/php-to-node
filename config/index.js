@@ -1,4 +1,4 @@
-const validateEnv = require('./utils/validateEnv');
+const validateEnv = require('../utils/validateEnv');
 
 const env = validateEnv();
 
