@@ -13,7 +13,7 @@ const validateEnv = () =>
       devDefault: 'development_local',
       default: 'production'
     }),
-    PORT: port({ default: 3010 }),
+    PORT: port({ default: 3011 }),
     ROOT_DOMAIN: str({ devDefault: 'localhost' }),
     LOG_LEVEL: str({ devDefault: 'info', default: 'error' }),
     MONGO_URI: str({ devDefault: 'mongodb://localhost:27017/rest-api' })
