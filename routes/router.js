@@ -1,5 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 const { API } = require('../config');
+const ProductRouter = require('./v1/product.router');
 
 function initializeRoutes(app) {
   app.get(`${API.PREFIX}/health-check`, (req, res) => {
@@ -9,6 +10,8 @@ function initializeRoutes(app) {
       date: new Date().toISOString()
     });
   });
+
+  app.use(`${API.PREFIX}/v1/products`, ProductRouter);
 
   app.use((error, req, res, next) => {
     next(error);
